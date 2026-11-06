@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mina Hwang-Seo — Pink Rider</title>
+  <meta name="description" content="Hover to reveal the pink rider.">
+  <meta property="og:title" content="Mina Hwang-Seo — Pink Rider">
+  <meta property="og:description" content="Hover to reveal the pink rider.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261103_152350_4fd91a2b-94c2-4b86-834f-3b7f9a716d5b.png">
+  <link rel="preload" as="image" href="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261103_152354_98c21034-6558-4210-a810-8232cf9d2557.png">
+  <style>
+    :root {
+      --bg: #fdeef3;
+      --bg-2: #fbe3eb;
+      --ink: #141114;
+      --muted: #7a6870;
+      --ghost: #d6c3ca;
+      --accent: #ff7fab;
+      --accent-ink: #ffffff;
+      --gutter: clamp(16px, 2.4vw, 32px);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      font-family: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    .nav { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: var(--gutter); }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 500; font-size: 15px; letter-spacing: -0.01em; }
+    .brand-mark { width: 34px; height: 34px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .links { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
+    .links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color .2s; }
+    .links a:hover { color: var(--ink); }
+    .links .cta { background: var(--accent); color: var(--accent-ink); font-weight: 500; padding: 10px 18px; border-radius: 10px; display: inline-flex; gap: 6px; align-items: center; transition: transform .2s, background .2s; }
+    .links .cta:hover { color: #fff; background: #ff6a9c; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 100vh;
+      height: 100svh;
+      min-height: 560px;
+      overflow: hidden;
+      touch-action: pan-y;
+      cursor: none;
+      background: radial-gradient(60% 55% at 50% 45%, #fff6f9 0%, rgba(255,246,249,0) 70%), linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+    }
+
+    /* MARQUEES */
+    .marquees { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-58%); z-index: 1; pointer-events: none; user-select: none; display: flex; flex-direction: column; gap: clamp(4px, 1.2vw, 18px); }
+    .row { display: flex; width: max-content; white-space: nowrap; will-change: transform; }
+    .row span { font-size: clamp(54px, 9.6vw, 168px); line-height: 1; letter-spacing: -0.035em; text-transform: uppercase; padding-right: 0.3em; }
+    .row.ghost span { color: var(--ghost); font-weight: 400; }
+    .row.solid span { color: var(--ink); font-weight: 500; }
+    .row.ghost { animation: slideL 38s linear infinite; }
+    .row.solid { animation: slideR 32s linear infinite; }
+    @keyframes slideL { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes slideR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+    /* FIGURE */
+    .figure { position: absolute; left: 50%; bottom: 0; z-index: 2; height: min(94svh, 133vw); aspect-ratio: 3/4; transform: translateX(-50%); pointer-events: none; }
+    .figure img, .figure canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; }
+    .figure img { opacity: 0; }
+    .figure canvas { opacity: 0; transition: opacity .8s ease; }
+    .figure canvas.ready { opacity: 1; }
+
+    /* CUSTOM CURSOR */
+    .cursor { position: fixed; left: 0; top: 0; z-index: 30; pointer-events: none; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--accent); opacity: 0; transition: opacity .25s, width .2s, height .2s; }
+    .hero:hover ~ .cursor, .cursor.on { opacity: 1; }
+
+    /* HINT + TAG */
+    .hint { position: absolute; left: var(--gutter); bottom: var(--gutter); z-index: 3; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .hint i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .tag { position: absolute; right: var(--gutter); bottom: var(--gutter); z-index: 3; font-size: 12px; color: var(--ink); background: rgba(255,255,255,.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 8px 12px; border-radius: 999px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 720px) {
+      .links a:not(.cta) { display: none; }
+      .links .cta { padding: 9px 14px; font-size: 13px; }
+      .brand { font-size: 14px; }
+      .brand-mark { width: 30px; height: 30px; border-radius: 8px; }
+      .hero { cursor: auto; }
+      .marquees { transform: translateY(-62%); }
+      .figure { height: auto; width: min(160vw, 64svh); }
+      .tag { display: none; }
+      .hint { left: 50%; transform: translateX(-50%); bottom: 18px; background: rgba(255,255,255,.75); padding: 8px 12px; border-radius: 999px; color: var(--ink); white-space: nowrap; }
+    }
+    @media (hover: none) { .cursor { display: none; } }
+    @media (prefers-reduced-motion: reduce) { .row { animation-duration: 120s; } }
+  </style>
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+    </span>
+    Mina Hwang-Seo
+  </a>
+  <nav class="links">
+    <a href="#">Rides</a> <a href="#">Lookbooks</a> <a href="#">Journal</a>
+    <a class="cta" href="#">Say hi! <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+
+<section class="hero" id="hero" aria-label="Hover to reveal the pink rider">
+  <div class="marquees" aria-hidden="true">
+    <div class="row ghost">
+      <span>Dream Ride Sparkle</span>
+      <span>Dream Ride Sparkle</span>
+      <span>Dream Ride Sparkle</span>
+      <span>Dream Ride Sparkle</span>
+    </div>
+    <div class="row solid">
+      <span>Ride Pretty Stay Bolder</span>
+      <span>Ride Pretty Stay Bolder</span>
+      <span>Ride Pretty Stay Bolder</span>
+      <span>Ride Pretty Stay Bolder</span>
+    </div>
+  </div>
+  <div class="figure" id="figure">
+    <img id="front" alt="Young woman in a white ribbed top" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261103_152350_4fd91a2b-94c2-4b86-834f-3b7f9a716d5b.png">
+    <canvas id="reveal" aria-hidden="true"></canvas>
+  </div>
+  <p class="hint"><i></i><span id="hintText">Move your cursor to suit up</span></p>
+  <span class="tag">Pink Rider · SS27</span>
+</section>
+<div class="cursor" id="cursor"></div>
+
+<script>
+(() => {
+  const hero = document.getElementById("hero");
+  const figure = document.getElementById("figure");
+  const front = document.getElementById("front");
+  const reveal = document.getElementById("reveal");
+  const cursor = document.getElementById("cursor");
+  const hintText = document.getElementById("hintText");
+
+  // Touch detection must be LIVE
+  const touchMQ = window.matchMedia("(hover: none), (pointer: coarse)");
+  let coarse = false;
+  function syncTouch() {
+    coarse = touchMQ.matches;
+    if (hintText) {
+      hintText.textContent = coarse ? "Drag to suit up" : "Move your cursor to suit up";
+    }
+  }
+  syncTouch();
+  if (touchMQ.addEventListener) {
+    touchMQ.addEventListener("change", syncTouch);
+  } else if (touchMQ.addListener) {
+    touchMQ.addListener(syncTouch);
+  }
+
+  // Two offscreen canvases: mask (the brush trail) and buf (the back image clipped to the mask)
+  const mask = document.createElement("canvas");
+  const mctx = mask.getContext("2d");
+  const buf = document.createElement("canvas");
+  const bctx = buf.getContext("2d");
+  const ctx = reveal.getContext("2d");
+
+  const BACK_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261103_152354_98c21034-6558-4210-a810-8232cf9d2557.png";
+  const back = new Image();
+  let backReady = false;
+  back.onload = () => {
+    backReady = true;
+  };
+  back.src = BACK_URL;
+
+  let frontReady = false;
+  function markFrontReady() {
+    if (!frontReady) {
+      frontReady = true;
+      reveal.classList.add("ready");
+    }
+  }
+  if (front.complete && front.naturalWidth) {
+    markFrontReady();
+  } else {
+    front.addEventListener("load", markFrontReady);
+  }
+
+  let W = 0;
+  let H = 0;
+  let dpr = 1;
+
+  function resize() {
+    const r = figure.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width;
+    H = r.height;
+    const cw = Math.max(1, Math.round(W * dpr));
+    const ch = Math.max(1, Math.round(H * dpr));
+    reveal.width = cw;
+    reveal.height = ch;
+    mask.width = cw;
+    mask.height = ch;
+    buf.width = cw;
+    buf.height = ch;
+  }
+
+  window.addEventListener("resize", resize);
+  front.addEventListener("load", resize);
+  resize();
+
+  // Stamps
+  const LIFE = 1100;
+  let stamps = [];
+  let last = null;
+  let lastMove = performance.now();
+
+  function addStamp(x, y, now) {
+    const base = Math.max(W, 260) * (coarse ? 0.15 : 0.12);
+    const n = 3 + Math.floor(Math.random() * 3);
+    const lobes = [];
+    for (let i = 0; i < n; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * base * 0.45;
+      const radius = base * (0.45 + Math.random() * 0.55);
+      lobes.push({
+        dx: Math.cos(angle) * dist,
+        dy: Math.sin(angle) * dist,
+        r: radius
+      });
+    }
+    stamps.push({ x, y, t: now, lobes });
+  }
+
+  function pointerTo(clientX, clientY, now) {
+    const r = figure.getBoundingClientRect();
+    const fx = clientX - r.left;
+    const fy = clientY - r.top;
+    if (last) {
+      const dx = fx - last.x;
+      const dy = fy - last.y;
+      const dist = Math.hypot(dx, dy);
+      const step = Math.max(W, 260) * 0.04;
+      const count = Math.min(Math.floor(dist / step), 40);
+      for (let i = 1; i <= count; i++) {
+        const t = i / (count + 1);
+        addStamp(last.x + dx * t, last.y + dy * t, now);
+      }
+    }
+    addStamp(fx, fy, now);
+    last = { x: fx, y: fy };
+    lastMove = now;
+  }
+
+  hero.addEventListener("pointermove", (e) => {
+    const now = performance.now();
+    pointerTo(e.clientX, e.clientY, now);
+    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    cursor.classList.add("on");
+  });
+
+  hero.addEventListener("pointerleave", () => {
+    last = null;
+    cursor.classList.remove("on");
+  });
+
+  hero.addEventListener("pointerdown", (e) => {
+    const now = performance.now();
+    pointerTo(e.clientX, e.clientY, now);
+    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    cursor.classList.add("on");
+  });
+
+  // Auto-wander (only when coarse, i.e. touch devices)
+  let autoT = 0;
+  let autoLast = null;
+  function autoWander(now) {
+    if (!coarse) return;
+    if (now - lastMove < 2500) {
+      autoLast = null;
+      return;
+    }
+    autoT += 0.016;
+    const x = W * (0.5 + Math.sin(autoT * 1.3) * 0.28);
+    const y = H * (0.32 + Math.sin(autoT * 0.9 + 1) * 0.22);
+    if (!autoLast || Math.hypot(x - autoLast.x, y - autoLast.y) > W * 0.02) {
+      addStamp(x, y, now);
+      autoLast = { x, y };
+    }
+  }
+
+  function drawCover(c, img) {
+    const cw = c.canvas.width;
+    const ch = c.canvas.height;
+    const iw = img.naturalWidth || img.width;
+    const ih = img.naturalHeight || img.height;
+    if (!iw || !ih) return;
+    const scale = Math.max(cw / iw, ch / ih);
+    const sw = iw * scale;
+    const sh = ih * scale;
+    const sx = (cw - sw) / 2;
+    const sy = ch - sh;
+    c.drawImage(img, sx, sy, sw, sh);
+  }
+
+  function loop() {
+    requestAnimationFrame(loop);
+    const now = performance.now();
+    if (coarse) {
+      autoWander(now);
+    }
+
+    while (stamps.length > 0 && now - stamps[0].t > LIFE) {
+      stamps.shift();
+    }
+
+    if (stamps.length > 0) {
+      mctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      mctx.clearRect(0, 0, W, H);
+      mctx.fillStyle = "#000000";
+      for (let i = 0; i < stamps.length; i++) {
+        const s = stamps[i];
+        const age = now - s.t;
+        const k = Math.max(0, 1 - age / LIFE);
+        const scale = k < 0.75 ? k / 0.75 : 1;
+        const rScale = Math.pow(scale, 0.8);
+        for (let j = 0; j < s.lobes.length; j++) {
+          const lobe = s.lobes[j];
+          const lx = s.x + lobe.dx * scale;
+          const ly = s.y + lobe.dy * scale;
+          const lr = Math.max(0, lobe.r * rScale);
+          mctx.beginPath();
+          mctx.arc(lx, ly, lr, 0, Math.PI * 2);
+          mctx.fill();
+        }
+      }
+    }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.clearRect(0, 0, reveal.width, reveal.height);
+
+    if (frontReady) {
+      drawCover(ctx, front);
+    }
+
+    if (stamps.length > 0) {
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.drawImage(mask, 0, 0);
+      ctx.globalCompositeOperation = "source-over";
+
+      if (backReady) {
+        bctx.setTransform(1, 0, 0, 1, 0, 0);
+        bctx.globalCompositeOperation = "source-over";
+        bctx.clearRect(0, 0, buf.width, buf.height);
+        bctx.drawImage(mask, 0, 0);
+        bctx.globalCompositeOperation = "source-in";
+        drawCover(bctx, back);
+        ctx.drawImage(buf, 0, 0);
+      }
+    }
+  }
+
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

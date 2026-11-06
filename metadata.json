@@ -1,0 +1,6 @@
+{
+  "name": "Pink Rider",
+  "description": "Full-screen hero section featuring Mina Hwang-Seo with an organic hover-reveal effect.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
